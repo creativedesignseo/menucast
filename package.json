@@ -1,7 +1,10 @@
 {
   "name": "menucast",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dashboard": "npm run dev --workspace=apps/dashboard",
     "mobile": "npm run start --workspace=apps/mobile-tv"
