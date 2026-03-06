@@ -9,6 +9,7 @@ const navItems = [
   { href: '/dashboard/screens', label: 'Pantallas' },
   { href: '/dashboard/content', label: 'Contenido' },
   { href: '/dashboard/playlists', label: 'Playlists' },
+  { href: '/dashboard/settings', label: 'Configuracion' },
 ]
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
