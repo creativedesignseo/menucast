@@ -6,7 +6,7 @@ import { isTV } from './src/lib/platform'
 import { LoginScreen } from './src/screens/LoginScreen'
 import { PairingScreen } from './src/screens/tv/PairingScreen'
 import { PlayerScreen } from './src/screens/tv/PlayerScreen'
-import { ScreensScreen } from './src/screens/mobile/ScreensScreen'
+import { TabNavigator } from './src/screens/mobile/TabNavigator'
 import { getStoredScreenId } from './src/hooks/usePairing'
 
 export default function App() {
@@ -67,7 +67,7 @@ export default function App() {
   return (
     <>
       <StatusBar style="dark" />
-      <ScreensScreen />
+      <TabNavigator />
     </>
   )
 }
