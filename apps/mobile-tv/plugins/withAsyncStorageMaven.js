@@ -1,26 +1,34 @@
-const { withSettingsGradle } = require("expo/config-plugins");
+const { withProjectBuildGradle } = require("expo/config-plugins");
 
 /**
- * Expo config plugin to add the AsyncStorage Maven repository.
+ * Expo config plugin to add the AsyncStorage Maven repository
+ * to the PROJECT-level build.gradle (not settings.gradle).
+ * 
  * Required for @react-native-async-storage/async-storage >= 2.x
  * which publishes org.asyncstorage.shared_storage to a custom Maven repo.
+ * 
+ * Gradle ignores settings-level repos when project-level repos exist,
+ * so we MUST inject at the project level.
  */
 module.exports = function withAsyncStorageMaven(config) {
-  return withSettingsGradle(config, (config) => {
-    const mavenRepo = `
-        maven {
-            url "https://raw.githubusercontent.com/nicklasi/asyncstorage-maven/main"
-            content {
-                includeGroup "org.asyncstorage.shared_storage"
-            }
-        }`;
+  return withProjectBuildGradle(config, (config) => {
+    const contents = config.modResults.contents;
 
-    // Add to dependencyResolutionManagement repositories
-    if (!config.modResults.contents.includes("asyncstorage-maven")) {
-      config.modResults.contents = config.modResults.contents.replace(
-        /dependencyResolutionManagement\s*\{[^}]*repositories\s*\{/,
-        (match) => `${match}${mavenRepo}`
+    if (contents.includes("asyncstorage-maven")) {
+      return config;
+    }
+
+    // Add the Maven repo to allprojects.repositories block
+    const mavenRepo = `        maven { url "https://raw.githubusercontent.com/nicklasi/asyncstorage-maven/main" }`;
+
+    if (contents.includes("allprojects")) {
+      config.modResults.contents = contents.replace(
+        /allprojects\s*\{[\s\S]*?repositories\s*\{/,
+        (match) => `${match}\n${mavenRepo}`
       );
+    } else {
+      // If no allprojects block, append one
+      config.modResults.contents = contents + `\nallprojects {\n    repositories {\n${mavenRepo}\n    }\n}\n`;
     }
 
     return config;
