@@ -4,6 +4,7 @@ import { Text } from 'react-native'
 import { ScreensScreen } from './ScreensScreen'
 import { ContentScreen } from './ContentScreen'
 import { PlaylistsScreen } from './PlaylistsScreen'
+import { ProfileScreen } from './ProfileScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -37,6 +38,11 @@ export function TabNavigator() {
           name="Playlists"
           component={PlaylistsScreen}
           options={{ tabBarIcon: ({ color }) => <Icon symbol="▶" /> }}
+        />
+        <Tab.Screen
+          name="Perfil"
+          component={ProfileScreen}
+          options={{ tabBarIcon: ({ color }) => <Icon symbol="👤" /> }}
         />
       </Tab.Navigator>
     </NavigationContainer>

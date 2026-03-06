@@ -12,7 +12,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Necesitamos acceso a tu galeria para subir imagenes y videos a tus pantallas.",
+        "NSPhotoLibraryAddUsageDescription": "Necesitamos acceso para guardar contenido."
+      }
     },
     "android": {
       "package": "com.menucast.app",
@@ -32,6 +36,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Necesitamos acceso a tu galeria para subir imagenes y videos.",
+          "cameraPermission": false
+        }
+      ]
+    ]
   }
 }
