@@ -4,22 +4,30 @@ import { Session } from '@supabase/supabase-js'
 import { supabase } from './src/lib/supabase'
 import { isTV } from './src/lib/platform'
 import { LoginScreen } from './src/screens/LoginScreen'
+import { PairingScreen } from './src/screens/tv/PairingScreen'
 import { PlayerScreen } from './src/screens/tv/PlayerScreen'
 import { ScreensScreen } from './src/screens/mobile/ScreensScreen'
-
-// En produccion, el screenId se obtiene del pairing code almacenado
-// Por ahora lo dejamos como variable de entorno o hardcoded para pruebas
-const TV_SCREEN_ID = process.env.EXPO_PUBLIC_SCREEN_ID ?? ''
+import { getStoredScreenId } from './src/hooks/usePairing'
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
+  const [screenId, setScreenId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const init = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
       setSession(session)
+
+      if (isTV) {
+        const stored = await getStoredScreenId()
+        setScreenId(stored)
+      }
+
       setLoading(false)
-    })
+    }
+
+    init()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
@@ -39,13 +47,27 @@ export default function App() {
     )
   }
 
+  if (isTV) {
+    if (!screenId) {
+      return (
+        <>
+          <StatusBar style="light" />
+          <PairingScreen onPaired={id => setScreenId(id)} />
+        </>
+      )
+    }
+    return (
+      <>
+        <StatusBar style="light" />
+        <PlayerScreen screenId={screenId} />
+      </>
+    )
+  }
+
   return (
     <>
-      <StatusBar style={isTV ? 'light' : 'dark'} />
-      {isTV
-        ? <PlayerScreen screenId={TV_SCREEN_ID} />
-        : <ScreensScreen />
-      }
+      <StatusBar style="dark" />
+      <ScreensScreen />
     </>
   )
 }
