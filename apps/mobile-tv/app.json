@@ -49,7 +49,8 @@
           "photosPermission": "Necesitamos acceso a tu galeria para subir imagenes y videos.",
           "cameraPermission": false
         }
-      ]
+      ],
+      "./plugins/withAsyncStorageMaven"
     ],
     "extra": {
       "eas": {
