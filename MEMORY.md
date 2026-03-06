@@ -1,7 +1,5 @@
 # MenuCast — Memoria del Proyecto (Para Agentes AI)
 
-> **Lee este archivo PRIMERO antes de hacer cualquier cambio en el proyecto.**
-
 ## ¿Qué es MenuCast?
 
 Plataforma SaaS de Digital Signage. Los negocios (restaurantes, clínicas, etc.) controlan pantallas digitales remotamente: suben contenido, crean playlists y las asignan a pantallas físicas (Android TV, Smart TV, tablets).
@@ -10,14 +8,14 @@ Plataforma SaaS de Digital Signage. Los negocios (restaurantes, clínicas, etc.)
 
 ## Stack Tecnológico
 
-| Capa | Tecnología | Ubicación |
-|---|---|---|
-| Dashboard Web | Next.js 16, App Router, Tailwind CSS | `apps/dashboard/` |
-| App Móvil + TV | Expo SDK 55, React Native | `apps/mobile-tv/` |
-| Backend | Supabase (Auth, PostgreSQL, Storage, Realtime) | `supabase/migrations/` |
-| Monorepo | npm workspaces | raíz `package.json` |
-| Deploy Web | Vercel (pendiente) | — |
-| Deploy App | EAS Build | `apps/mobile-tv/eas.json` |
+| Capa            | Tecnología                                    | Ubicación                  |
+| --------------- | ---------------------------------------------- | --------------------------- |
+| Dashboard Web   | Next.js 16, App Router, Tailwind CSS           | `apps/dashboard/`         |
+| App Móvil + TV | Expo SDK 55, React Native                      | `apps/mobile-tv/`         |
+| Backend         | Supabase (Auth, PostgreSQL, Storage, Realtime) | `supabase/migrations/`    |
+| Monorepo        | npm workspaces                                 | raíz `package.json`      |
+| Deploy Web      | Vercel (pendiente)                             | —                          |
+| Deploy App      | EAS Build                                      | `apps/mobile-tv/eas.json` |
 
 **Supabase Project ID:** `vfpkeklmnhtsqsdoeayi`
 **Supabase Account:** `globalnetworkprime@gmail.com` (cuenta separada de GitHub)
