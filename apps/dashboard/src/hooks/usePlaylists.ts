@@ -20,6 +20,7 @@ export type PlaylistItem = {
 export function usePlaylists(orgId: string | undefined) {
   const [playlists, setPlaylists] = useState<Playlist[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -29,47 +30,83 @@ export function usePlaylists(orgId: string | undefined) {
       .select('*')
       .eq('org_id', orgId)
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) setError(error.message)
         setPlaylists(data ?? [])
         setLoading(false)
       })
-  }, [orgId])
+  }, [orgId, supabase])
 
   const createPlaylist = async (name: string): Promise<Playlist | null> => {
     if (!orgId) return null
-    const { data } = await supabase
-      .from('playlists')
-      .insert({ org_id: orgId, name })
-      .select()
-      .single()
-    if (data) setPlaylists(prev => [data, ...prev])
-    return data
+    try {
+      setError(null)
+      const { data, error } = await supabase
+        .from('playlists')
+        .insert({ org_id: orgId, name })
+        .select()
+        .single()
+      
+      if (error) throw new Error(error.message)
+      if (data) setPlaylists(prev => [data, ...prev])
+      return data
+    } catch (err: any) {
+      setError(err.message)
+      return null
+    }
   }
 
   const deletePlaylist = async (id: string) => {
-    await supabase.from('playlists').delete().eq('id', id)
-    setPlaylists(prev => prev.filter(p => p.id !== id))
+    try {
+      setError(null)
+      const { error } = await supabase.from('playlists').delete().eq('id', id)
+      if (error) throw new Error(error.message)
+      setPlaylists(prev => prev.filter(p => p.id !== id))
+    } catch (err: any) {
+      setError(err.message)
+    }
   }
 
   const addItem = async (playlistId: string, contentItemId: string, position: number, durationSeconds = 10) => {
-    const { data } = await supabase
-      .from('playlist_items')
-      .insert({ playlist_id: playlistId, content_item_id: contentItemId, position, duration_seconds: durationSeconds })
-      .select()
-      .single()
-    return data
+    try {
+      setError(null)
+      const { data, error } = await supabase
+        .from('playlist_items')
+        .insert({ playlist_id: playlistId, content_item_id: contentItemId, position, duration_seconds: durationSeconds })
+        .select()
+        .single()
+      
+      if (error) throw new Error(error.message)
+      return data
+    } catch (err: any) {
+      setError(err.message)
+      return null
+    }
   }
 
   const removeItem = async (itemId: string) => {
-    await supabase.from('playlist_items').delete().eq('id', itemId)
+    try {
+      setError(null)
+      const { error } = await supabase.from('playlist_items').delete().eq('id', itemId)
+      if (error) throw new Error(error.message)
+    } catch (err: any) {
+      setError(err.message)
+    }
   }
 
   const assignToScreen = async (screenId: string, playlistId: string | null) => {
-    await supabase
-      .from('screens')
-      .update({ current_playlist_id: playlistId })
-      .eq('id', screenId)
+    try {
+      setError(null)
+      const { error } = await supabase
+        .from('screens')
+        .update({ current_playlist_id: playlistId })
+        .eq('id', screenId)
+      
+      if (error) throw new Error(error.message)
+    } catch (err: any) {
+      setError(err.message)
+    }
   }
 
-  return { playlists, loading, createPlaylist, deletePlaylist, addItem, removeItem, assignToScreen }
+  return { playlists, loading, error, createPlaylist, deletePlaylist, addItem, removeItem, assignToScreen }
 }

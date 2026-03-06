@@ -19,19 +19,19 @@ export type PlaylistItem = {
   content_item: ContentItem
 }
 
-const CACHE_KEY = 'player_playlist_cache'
-
 export function usePlayer(screenId: string) {
   const [items, setItems] = useState<PlaylistItem[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const timerRef = useRef<ReturnType<typeof setTimeout>>()
 
+  const cacheKey = `player_playlist_cache_${screenId}`
+
   // Cargar desde cache primero (offline resilience)
   useEffect(() => {
-    AsyncStorage.getItem(CACHE_KEY).then(cached => {
+    AsyncStorage.getItem(cacheKey).then(cached => {
       if (cached) setItems(JSON.parse(cached))
     })
-  }, [])
+  }, [cacheKey])
 
   // Cargar desde servidor y suscribirse a cambios en tiempo real
   useEffect(() => {
@@ -53,7 +53,7 @@ export function usePlayer(screenId: string) {
       if (playlistItems && playlistItems.length > 0) {
         setItems(playlistItems as PlaylistItem[])
         setCurrentIndex(0)
-        AsyncStorage.setItem(CACHE_KEY, JSON.stringify(playlistItems))
+        AsyncStorage.setItem(cacheKey, JSON.stringify(playlistItems))
       }
     }
 

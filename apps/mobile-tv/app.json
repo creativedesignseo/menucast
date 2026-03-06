@@ -30,8 +30,13 @@
       "intentFilters": [
         {
           "action": "android.intent.action.MAIN",
-          "category": ["android.intent.category.LEANBACK_LAUNCHER"]
+          "category": [
+            "android.intent.category.LEANBACK_LAUNCHER"
+          ]
         }
+      ],
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
@@ -45,6 +50,11 @@
           "cameraPermission": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2c5eaf9b-1f45-47ae-ac84-c5fe58361c8e"
+      }
+    }
   }
 }

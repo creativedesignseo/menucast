@@ -38,8 +38,8 @@ create policy "Owner deletes screens" on public.screens
 create policy "Screen updates own status" on public.screens
   for update
   to authenticated
-  using (true)
-  with check (true);
+  using (org_id in (select id from public.organizations where owner_id = auth.uid()))
+  with check (org_id in (select id from public.organizations where owner_id = auth.uid()));
 
 -- Content items: permitir que propietarios creen, actualicen, eliminen
 create policy "Owner creates content" on public.content_items
